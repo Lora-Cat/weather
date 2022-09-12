@@ -1,0 +1,232 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Weather Forecast</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-8">
+          <img src="images/logo.png" alt="logo" class="logo" />
+          <h1>Weather <br /><span>Forecast</span></h1>
+        </div>
+        <div class="col-12 col-sm-12 col-md-4">
+          <button class="btn btn-success full-width">Sign in</button>
+          <button class="btn btn-primary full-width">Register</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-8">
+          <h2>Favourite locations</h2>
+          <ul class="fav-locations">
+            <li class="location"><a href="">Paris</a></li>
+            <li class="location"><a href="">Tokyo</a></li>
+            <li class="location"><a href="">Sydney</a></li>
+            <li class="location"><a href="">Lisbon</a></li>
+          </ul>
+        </div>
+        <div class="col-12 col-sm-12 col-md-4">
+          <div class="right">
+            <button class="btn btn-success full-width">
+              + Add new location
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <form role="search" class="full-width" id="search">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter a location"
+                id="search-location"
+              />
+              <span class="input-group-btn">
+                <input type="submit" class="btn btn-success" value="Search" />
+              </span>
+            </div>
+          </form>
+        </div>
+        <div class="col-12 col-md-4">
+          <button class="btn btn-primary full-width" id="currentLocation">
+            Current location
+          </button>
+        </div>
+      </div>
+      <div class="row weather">
+        <div class="col-12 col-md-6">
+          <div class="cityName">New York</div>
+          <div class="stateName">The United States of America</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="time">12<span id="blink">:</span>32</div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="currentDate">
+            Friday<br />
+            August 19
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-2 currentWeather weather">
+          <div>
+            <div id="iconCurrentWeather">
+              <div class="icon sunny">
+                <div class="sun">
+                  <div class="rays"></div>
+                </div>
+              </div>
+            </div>
+            <span class="temperature current" id="currentTemperature"
+              >24°C</span
+            >
+          </div>
+          Wind: <span id="currentWindSpeed">6</span> m/s<br />
+          Precipitation: <span id="currentPrecipitation">29</span>%<br />
+          Humidity: <span id="currentHumidity">55</span>%<br />
+          <div class="btn-group mx-auto mt-1">
+            <button class="btn btn-success" disabled id="celsius">°C</button>
+            <button class="btn btn-success" id="fahrenheit">°F</button>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus1"></div>
+          <div class="icon sun-cloudy">
+            <div class="cloud"></div>
+            <div class="sun">
+              <div class="rays"></div>
+            </div>
+          </div>
+          max <span class="temperature">25°C</span><br />
+          min <span class="temperature">17°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">23°C</span>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus2"></div>
+          <div class="icon sunny">
+            <div class="sun">
+              <div class="rays"></div>
+            </div>
+          </div>
+          max <span class="temperature">27°C</span><br />
+          min <span class="temperature">22°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">25°C</span>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus3"></div>
+          <div class="icon cloudy">
+            <div class="cloud"></div>
+            <div class="cloud"></div>
+          </div>
+          max <span class="temperature">29°C</span><br />
+          min <span class="temperature">23°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">26°C</span>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus4"></div>
+          <div class="icon sun-cloudy">
+            <div class="cloud"></div>
+            <div class="sun">
+              <div class="rays"></div>
+            </div>
+          </div>
+          max <span class="temperature">22°C</span><br />
+          min <span class="temperature">15°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">19°C</span>
+          </div>
+        </div>
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus5"></div>
+          <div class="icon rainy">
+            <div class="cloud"></div>
+            <div class="rain"></div>
+          </div>
+          max <span class="temperature">19°C</span><br />
+          min <span class="temperature">14°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">17°C</span>
+          </div>
+        </div>
+      </div>
+      <div class="row weather">
+        <div class="col-12 col-md-3 info">
+          Sunrise: <span><span id="sunrise">6:05</span> am</span><br />
+          Sunset: <span><span id="sunset">7:55</span> pm</span>
+        </div>
+        <div class="col-12 col-md-3 info">
+          Moonrise: <span><span id="moonrise">9:46</span> pm</span><br />
+          Moonset: <span><span id="moonset">8:54</span> am</span>
+        </div>
+        <div class="col-12 col-md-6 info">
+          Maximum temperature in history:
+          <span class="temperature" id="maxTemperature">37°C</span>
+          <br />
+          Minimum temperature in history:
+          <span class="temperature" id="minTemperature">12°C</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12"><h3>Top 10 city weather forecasts</h3></div>
+      </div>
+      <div class="row">
+        <div class="col-6 col-md-3">
+          <ul class="top-locations">
+            <li><a href="">New York</a></li>
+            <li><a href="">Paris</a></li>
+            <li><a href="">Athens</a></li>
+            <li><a href="">Roma</a></li>
+            <li><a href="">London</a></li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-3">
+          <ul class="top-locations">
+            <li><a href="">Dubai</a></li>
+            <li><a href="">Madrid</a></li>
+            <li><a href="">Berlin</a></li>
+            <li><a href="">Beijing</a></li>
+            <li><a href="">Tokyo</a></li>
+          </ul>
+        </div>
+      </div>
+      <footer>Coded by Valentyna Nykonchuk</footer>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <script src="scripts/script.js"></script>
+  </body>
+</html>
