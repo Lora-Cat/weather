@@ -1,6 +1,7 @@
 /** @format */
 let apiKey = "91e4be9d3f0ce62462b88df7804804ae";
 let apiAstronomy = "b99861f9264143c2bd4a20afe37f2ab0";
+let timezone = 0;
 function zero_first_format(value) {
   if (value < 10) {
     value = "0" + value;
@@ -39,8 +40,9 @@ function date(dayPlus) {
   ];
   return dayName + "<br />" + monthNames[month] + " " + day;
 }
-function time() {
+function time(timezone) {
   let current_datetime = new Date();
+  current_datetime.setHours(current_datetime.getHours() + timezone / 60);
   let hours = zero_first_format(current_datetime.getHours());
   let minutes = zero_first_format(current_datetime.getMinutes());
 
@@ -53,7 +55,7 @@ document.querySelector(".dayPlus3").innerHTML = date(3);
 document.querySelector(".dayPlus4").innerHTML = date(4);
 document.querySelector(".dayPlus5").innerHTML = date(5);
 setInterval(function () {
-  document.querySelector(".time").innerHTML = time();
+  document.querySelector(".time").innerHTML = time(timezone);
 }, 1000);
 
 function searchUpdate(e) {
@@ -145,7 +147,11 @@ function updateAstronomy(response) {
   let moonset = response.data.moonset;
   document.querySelector("#moonset").innerHTML = moonset;
 }
-
+function updateTime(response) {
+  let current_timezone = response.data.timezone_offset * 60;
+  let current_datetime = new Date();
+  timezone = current_timezone + current_datetime.getTimezoneOffset();
+}
 function updateCurrentData(response) {
   document.querySelector(".cityName").innerHTML =
     response.data.name.toUpperCase();
@@ -161,8 +167,10 @@ function updateCurrentData(response) {
   updateIcon(conditions);
   let weatherDescription = response.data.weather[0].description;
   document.querySelector("#weatherDescription").innerHTML = weatherDescription;
-  let urlAstronomy = `https://api.ipgeolocation.io/astronomy?apiKey=${apiAstronomy}&lat=-${response.data.coord.lat}&long=${response.data.coord.lon}`;
+  let urlAstronomy = `https://api.ipgeolocation.io/astronomy?apiKey=${apiAstronomy}&lat=${response.data.coord.lat}&long=${response.data.coord.lon}`;
   axios.get(urlAstronomy).then(updateAstronomy);
+  let urlTime = `https://api.ipgeolocation.io/timezone?apiKey=${apiAstronomy}&lat=${response.data.coord.lat}&long=${response.data.coord.lon}`;
+  axios.get(urlTime).then(updateTime);
 }
 function currentLocation(position) {
   let lat = position.coords.latitude;
