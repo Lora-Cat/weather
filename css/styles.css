@@ -169,6 +169,10 @@ footer {
   margin: 4px auto;
 }
 
+#weatherDescription {
+  text-transform: capitalize;
+}
+
 .cloud {
   position: absolute;
   z-index: 1;

@@ -149,6 +149,8 @@ function updateCurrentData(response) {
   document.querySelector("#currentHumidity").innerHTML = humidity;
   let conditions = response.data.weather[0].icon;
   updateIcon(conditions);
+  let weatherDescription = response.data.weather[0].description;
+  document.querySelector("#weatherDescription").innerHTML = weatherDescription;
   let urlAstronomy = `https://api.ipgeolocation.io/astronomy?apiKey=${apiAstronomy}&lat=-${response.data.coord.lat}&long=${response.data.coord.lon}`;
   axios.get(urlAstronomy).then(updateAstronomy);
 }
