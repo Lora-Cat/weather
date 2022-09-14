@@ -66,6 +66,16 @@ function searchUpdate(e) {
     axios.get(urlCity).then(updateCurrentData);
   }
 }
+function favouriteLocationUpdate(e) {
+  e.preventDefault();
+  let cityName = this.innerHTML;
+  if (cityName !== "") {
+    cityName = cityName.trim().toUpperCase();
+    let urlCity = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
+    axios.get(urlCity).then(updateCurrentData);
+  }
+}
+
 function updateLocation() {
   navigator.geolocation.getCurrentPosition(currentLocation);
 }
@@ -165,6 +175,12 @@ currentLocationButton.addEventListener("click", updateLocation);
 
 let search = document.querySelector("#search");
 search.addEventListener("submit", searchUpdate);
+
+document
+  .querySelectorAll(".location a")
+  .forEach((favLocation) =>
+    favLocation.addEventListener("click", favouriteLocationUpdate)
+  );
 
 let fahrenheit = document.querySelector("#fahrenheit");
 let celsius = document.querySelector("#celsius");
