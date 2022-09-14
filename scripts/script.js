@@ -182,6 +182,12 @@ document
     favLocation.addEventListener("click", favouriteLocationUpdate)
   );
 
+document
+  .querySelectorAll(".top-locations li a")
+  .forEach((favLocation) =>
+    favLocation.addEventListener("click", favouriteLocationUpdate)
+  );
+
 let fahrenheit = document.querySelector("#fahrenheit");
 let celsius = document.querySelector("#celsius");
 
