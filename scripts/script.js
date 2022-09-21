@@ -52,8 +52,13 @@ function time(timezone) {
 
   return hours + '<span id="blink">:</span>' + minutes;
 }
+function updateYearAgoData(response) {
+  let tempYearAgo = document.querySelector("#tempYearAgo");
+  tempYearAgo.innerHTML = response.data.current.temp + "°C";
+  let realFeelYearAgo = document.querySelector("#realFeelYearAgo");
+  realFeelYearAgo.innerHTML = response.data.current.feels_like + "°C";
+}
 function displayForecast(response) {
-  console.log(response);
   let forecastDay = response.data;
   document.querySelector(".currentDate").innerHTML = date(
     forecastDay.current.dt * 1000
@@ -108,9 +113,30 @@ function displayForecast(response) {
         </div>
         `;
   }
-
   forecastElement.innerHTML = forecastData + `</div>`;
+  let deg = Math.round(360 - forecastDay.daily[0].moon_phase * 360);
+  document.querySelector(
+    ".divider"
+  ).style.transform = `rotate3d(0, 1, 0, ${deg}deg)`;
+
+  let hemispheres = document.querySelectorAll(".hemisphere");
+
+  if (deg < 180) {
+    hemispheres[0].classList.remove("dark");
+    hemispheres[0].classList.add("light");
+
+    hemispheres[1].classList.add("dark");
+    hemispheres[1].classList.remove("light");
+    console.log(deg);
+  } else {
+    hemispheres[0].classList.add("dark");
+    hemispheres[0].classList.remove("light");
+
+    hemispheres[1].classList.remove("dark");
+    hemispheres[1].classList.add("light");
+  }
 }
+
 setInterval(function () {
   document.querySelector(".time").innerHTML = time(timezone);
 }, 1000);
