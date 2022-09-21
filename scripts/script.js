@@ -127,7 +127,6 @@ function displayForecast(response) {
 
     hemispheres[1].classList.add("dark");
     hemispheres[1].classList.remove("light");
-    console.log(deg);
   } else {
     hemispheres[0].classList.add("dark");
     hemispheres[0].classList.remove("light");
