@@ -48,6 +48,54 @@ function time(timezone) {
 
   return hours + '<span id="blink">:</span>' + minutes;
 }
+function displayForecast() {
+  let forecastElement = document.querySelector("#forecast");
+  let forecastData = `
+      <div class="row">
+        <div class="col-12 col-md-2 currentWeather weather">
+          <div>
+            <div id="iconCurrentWeather">
+              <div class="icon sunny">
+                <div class="sun">
+                  <div class="rays"></div>
+                </div>
+              </div>
+            </div>
+            <span class="temperature current" id="currentTemperature"
+              >24°C</span
+            >
+          </div>
+          <span id="weatherDescription">Clear Sky</span><br />
+          Wind: <span id="currentWindSpeed">6</span> km/h<br />
+          Humidity: <span id="currentHumidity">55</span>%<br />
+          <div class="btn-group mx-auto mt-1">
+            <button class="btn btn-success" disabled id="celsius">°C</button>
+            <button class="btn btn-success" id="fahrenheit">°F</button>
+          </div>
+        </div>`;
+  for (i = 1; i <= 5; i++) {
+    forecastData += `        
+        <div class="col-12 col-md-2 nextDate weather">
+          <div class="dayPlus${i}"></div>
+          <div class="icon sun-cloudy">
+            <div class="cloud"></div>
+            <div class="sun">
+              <div class="rays"></div>
+            </div>
+          </div>
+          max <span class="temperature">25°C</span><br />
+          min <span class="temperature">17°C</span><br />
+          <div class="realFeel">
+            RealFeel<br />
+            <span class="temperature">23°C</span>
+          </div>
+        </div>
+        `;
+  }
+
+  forecastElement.innerHTML = forecastData + `</div>`;
+}
+displayForecast();
 document.querySelector(".currentDate").innerHTML = date(0);
 document.querySelector(".dayPlus1").innerHTML = date(1);
 document.querySelector(".dayPlus2").innerHTML = date(2);
