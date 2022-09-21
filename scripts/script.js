@@ -1,6 +1,11 @@
 /** @format */
 let apiKey = "91e4be9d3f0ce62462b88df7804804ae";
 let apiAstronomy = "b99861f9264143c2bd4a20afe37f2ab0";
+//displayForecast();
+let startCity = "New York";
+let urlStartCity = `https://api.openweathermap.org/data/2.5/weather?q=${startCity}&appid=${apiKey}&units=metric`;
+axios.get(urlStartCity).then(updateCurrentData);
+
 let timezone = 0;
 function zero_first_format(value) {
   if (value < 10) {
@@ -9,9 +14,8 @@ function zero_first_format(value) {
   return value;
 }
 
-function date(dayPlus) {
-  let current_datetime = new Date();
-  current_datetime.setDate(current_datetime.getDate() + dayPlus);
+function date(timestamp) {
+  let current_datetime = new Date(timestamp);
   let day = zero_first_format(current_datetime.getDate());
   let month = current_datetime.getMonth();
   let days = [
@@ -48,46 +52,58 @@ function time(timezone) {
 
   return hours + '<span id="blink">:</span>' + minutes;
 }
-function displayForecast() {
+function displayForecast(response) {
+  console.log(response);
+  let forecastDay = response.data;
+  document.querySelector(".currentDate").innerHTML = date(
+    forecastDay.current.dt * 1000
+  );
   let forecastElement = document.querySelector("#forecast");
   let forecastData = `
       <div class="row">
         <div class="col-12 col-md-2 currentWeather weather">
           <div>
-            <div id="iconCurrentWeather">
-              <div class="icon sunny">
-                <div class="sun">
-                  <div class="rays"></div>
-                </div>
-              </div>
-            </div>
+            <div id="iconCurrentWeather">${updateIcon(
+              forecastDay.current.weather[0].icon
+            )}</div>
             <span class="temperature current" id="currentTemperature"
-              >24°C</span
+              >${Math.round(forecastDay.current.temp)}°C</span
             >
           </div>
-          <span id="weatherDescription">Clear Sky</span><br />
-          Wind: <span id="currentWindSpeed">6</span> km/h<br />
-          Humidity: <span id="currentHumidity">55</span>%<br />
+          <span id="weatherDescription">${
+            forecastDay.current.weather[0].description
+          }</span><br />
+          Wind: <span id="currentWindSpeed">${
+            forecastDay.current.wind_speed
+          }</span> km/h<br />
+          Humidity: <span id="currentHumidity">${
+            forecastDay.current.humidity
+          }</span>%<br />
           <div class="btn-group mx-auto mt-1">
-            <button class="btn btn-success" disabled id="celsius">°C</button>
-            <button class="btn btn-success" id="fahrenheit">°F</button>
+            <button class="btn btn-success" disabled id="celsius" onClick="toCelsius(); document.querySelector('#fahrenheit').disabled = false; document.querySelector('#celsius').disabled = true;">°C</button>
+            <button class="btn btn-success" id="fahrenheit" onClick="toFahrenheit(); document.querySelector('#fahrenheit').disabled = true; document.querySelector('#celsius').disabled = false;">°F</button>
           </div>
         </div>`;
   for (i = 1; i <= 5; i++) {
     forecastData += `        
         <div class="col-12 col-md-2 nextDate weather">
-          <div class="dayPlus${i}"></div>
-          <div class="icon sun-cloudy">
-            <div class="cloud"></div>
-            <div class="sun">
-              <div class="rays"></div>
-            </div>
-          </div>
-          max <span class="temperature">25°C</span><br />
-          min <span class="temperature">17°C</span><br />
+          <div class="dayPlus${i}">${date(
+      response.data.daily[i].dt * 1000
+    )}</div>${updateIcon(
+      response.data.daily[i].weather[0].icon
+    )}max <span class="temperature">${Math.round(
+      response.data.daily[i].temp.max
+    )}°C</span><br />
+          min <span class="temperature">${Math.round(
+            response.data.daily[i].temp.min
+          )}°C</span><br />
           <div class="realFeel">
             RealFeel<br />
-            <span class="temperature">23°C</span>
+            <span class="temperature">${Math.round(
+              response.data.daily[i].feels_like.day
+            )}°C</span> / <span class="temperature">${Math.round(
+      response.data.daily[i].feels_like.night
+    )}°C</span>
           </div>
         </div>
         `;
@@ -95,13 +111,6 @@ function displayForecast() {
 
   forecastElement.innerHTML = forecastData + `</div>`;
 }
-displayForecast();
-document.querySelector(".currentDate").innerHTML = date(0);
-document.querySelector(".dayPlus1").innerHTML = date(1);
-document.querySelector(".dayPlus2").innerHTML = date(2);
-document.querySelector(".dayPlus3").innerHTML = date(3);
-document.querySelector(".dayPlus4").innerHTML = date(4);
-document.querySelector(".dayPlus5").innerHTML = date(5);
 setInterval(function () {
   document.querySelector(".time").innerHTML = time(timezone);
 }, 1000);
@@ -183,7 +192,7 @@ function updateIcon(conditions) {
       content =
         '<div class="icon sunny"><div class="sun"><div class="rays"></div></div></div>';
   }
-  document.querySelector("#iconCurrentWeather").innerHTML = content;
+  return content;
 }
 function updateAstronomy(response) {
   let sunrise = response.data.sunrise;
@@ -203,18 +212,10 @@ function updateTime(response) {
 function updateCurrentData(response) {
   document.querySelector(".cityName").innerHTML =
     response.data.name.toUpperCase();
+  let urlDailyForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&units=metric&appid=${apiKey}`;
+  axios.get(urlDailyForecast).then(displayForecast);
   let urlState = `https://restcountries.com/v3.1/alpha/${response.data.sys.country}`;
   axios.get(urlState).then(updateStateName);
-  let temperature = Math.round(response.data.main.temp);
-  document.querySelector("#currentTemperature").innerHTML = `${temperature}°C`;
-  let windSpeed = response.data.wind.speed;
-  document.querySelector("#currentWindSpeed").innerHTML = windSpeed;
-  let humidity = response.data.main.humidity;
-  document.querySelector("#currentHumidity").innerHTML = humidity;
-  let conditions = response.data.weather[0].icon;
-  updateIcon(conditions);
-  let weatherDescription = response.data.weather[0].description;
-  document.querySelector("#weatherDescription").innerHTML = weatherDescription;
   let urlAstronomy = `https://api.ipgeolocation.io/astronomy?apiKey=${apiAstronomy}&lat=${response.data.coord.lat}&long=${response.data.coord.lon}`;
   axios.get(urlAstronomy).then(updateAstronomy);
   let urlTime = `https://api.ipgeolocation.io/timezone?apiKey=${apiAstronomy}&lat=${response.data.coord.lat}&long=${response.data.coord.lon}`;
@@ -244,8 +245,8 @@ document
     favLocation.addEventListener("click", favouriteLocationUpdate)
   );
 
-let fahrenheit = document.querySelector("#fahrenheit");
-let celsius = document.querySelector("#celsius");
+//let fahrenheit = document.querySelector("#fahrenheit");
+//let celsius = document.querySelector("#celsius");
 
 function toFahrenheit() {
   let temperature = document.querySelectorAll(".temperature");
@@ -253,8 +254,8 @@ function toFahrenheit() {
     element.innerHTML =
       Math.floor(element.innerHTML.split("°")[0] * 1.8 + 32) + "°F";
   });
-  fahrenheit.disabled = true;
-  celsius.disabled = false;
+  //  fahrenheit.disabled = true;
+  //  celsius.disabled = false;
 }
 function toCelsius() {
   let temperature = document.querySelectorAll(".temperature");
@@ -262,8 +263,6 @@ function toCelsius() {
     element.innerHTML =
       Math.ceil((element.innerHTML.split("°")[0] - 32) / 1.8) + "°C";
   });
-  fahrenheit.disabled = false;
-  celsius.disabled = true;
+  //  fahrenheit.disabled = false;
+  //  celsius.disabled = true;
 }
-fahrenheit.addEventListener("click", toFahrenheit);
-celsius.addEventListener("click", toCelsius);
